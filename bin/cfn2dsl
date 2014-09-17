@@ -1,0 +1,35 @@
+#!/usr/bin/env ruby
+require_relative '../lib/cfn2dsl'
+
+USAGE = "Usage: #{File.basename(__FILE__)} -t|--template file [-o|--output file]"
+options = {}
+OptionParser.new do |opts|
+  opts.banner = USAGE
+  opts.on('-t', '--template file', 'Template file path') do |v|
+    options[:template] = v
+  end
+
+  opts.on('-o', '--output [file]', 'Output file path') do |v|
+    options[:output] = v
+  end
+
+  opts.on_tail('-h', '--help', 'show this message') do |_v|
+    puts opts
+    exit
+  end
+end.parse!
+
+unless options[:template]
+  puts USAGE
+  exit 1
+else
+  template = JSON.load(File.new(options[:template]))
+  cfndsl   = CloudFormation.from_json(template)
+end
+
+if options[:output]
+  File.open(options[:output], 'w') { |file| file.write(cfndsl.pretty_inspect) }
+else
+  puts cfndsl.to_s
+end
+
