@@ -4,7 +4,6 @@ require 'json'
 require 'optparse'
 require 'ap'
 
-require 'awesome_print'
 require 'cfn_parser'
 require 'cloudformation'
 require 'condition'
@@ -13,3 +12,10 @@ require 'mapping'
 require 'output'
 require 'parameter'
 require 'resource'
+
+AwesomePrint.defaults = {
+  :indent => -2,
+  :index => false,
+  :sort_keys => true,
+  :plain => true
+}
