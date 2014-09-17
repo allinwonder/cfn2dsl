@@ -41,4 +41,6 @@ class Resource
     ss << "  end"
     ss.join("\n")
   end
+
+  alias_method :inspect, :to_s
 end

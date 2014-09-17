@@ -11,15 +11,15 @@ class IntrinsicFunction
   end
 
   def to_s
-    argements_str = ""
+    arguments_str = ""
     parameters.each do |p|
       if p.instance_of? String
-        argements_str += '"' + p + '", '
+        arguments_str += '"' + p + '", '
       else
-        argements_str += parameters.to_s + ', '
+        arguments_str += parameters.ai + ', '
       end
     end
-    self.name.delete(':') + "(" + argements_str.sub(/,\s*$/, '') + ")"
+    self.name.delete(':') + "(" + arguments_str.sub(/,\s*$/, '') + ")"
   end
 
   alias_method :inspect, :to_s
