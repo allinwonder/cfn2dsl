@@ -1,5 +1,8 @@
 class Output
   include CfnParser
+
+  VALUE_KEY_NAME = "Value"
+
   attr_accessor(:name, :description, :value, :condition)
 
   def initialize(name, json)

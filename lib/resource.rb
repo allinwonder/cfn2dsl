@@ -1,5 +1,11 @@
 class Resource
   include CfnParser
+
+  DELETION_POLICY = "DeletionPolicy"
+  DEPEND_ON       = "DependsOn"
+  METADATA        = "Metadata"
+  UPDATE_POLICY   = "UpdatePolicy"
+
   attr_accessor :name, :type, :properties, :attributes, :condition
 
   def initialize(name, json)
@@ -43,4 +49,19 @@ class Resource
   end
 
   alias_method :inspect, :to_s
+
+  def attribute?(name)
+    result = false
+    case name
+    when DELETION_POLICY
+      result = true
+    when DEPEND_ON
+      result = true
+    when METADATA
+      result = true
+    when UPDATE_POLICY
+      result = true
+    end
+    return result
+  end
 end

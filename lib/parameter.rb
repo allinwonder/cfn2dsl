@@ -1,5 +1,18 @@
 class Parameter
   include CfnParser
+
+  TYPE_KEY_NAME       = "Type"
+  NO_ECHO_KEY_NAME    = "NoEcho"
+  MAX_LENGTH_KEY_NAME = "MaxLength"
+  MIN_LENGTH_KEY_NAME = "MinLength"
+  MAX_VALUE_KEY_NAME  = "MaxValue"
+  MIN_VALUE_KEY_NAME  = "MinValue"
+  DEFAULT_KEY_NAME    = "Default"
+
+  CONSTRAIN_DESCRIPTION_KEY_NAME = "ConstrainDescription"
+  ALLOWED_VALUES_KEY_NAME        = "AllowedValues"
+  ALLOWED_PATTERN_KEY_NAME       = "AllowedPattern"
+
   attr_accessor(:name, :type, :default, :description, :allowed_values,
     :allowed_pattern, :no_echo, :max_length, :min_length, :max_value,
     :min_value, :constrain_description)
