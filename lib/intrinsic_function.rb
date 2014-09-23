@@ -11,7 +11,6 @@ class IntrinsicFunction
   end
 
   def to_s
-    # arguments_str = ""
     arguments_str = parameters.map do |p|
       if p.instance_of? String
         '"' + p + '"'
@@ -20,6 +19,10 @@ class IntrinsicFunction
       end
     end
     self.name.delete(':') + "(" + arguments_str.join(',') + ")"
+  end
+
+  def ==(o)
+    o.name == @name && o.parameters == @parameters
   end
 
   alias_method :inspect, :to_s
