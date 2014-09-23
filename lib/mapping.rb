@@ -1,10 +1,10 @@
 class Mapping
   include CfnParser
-  attr_accessor(:name, :values)
+  attr_reader(:name, :values)
 
   def initialize(name, values)
-    self.name   = name
-    self.values = translate_cfn_functions(values)
+    @name   = name
+    @values = translate_cfn_functions(values)
   end
 
   # def to_s

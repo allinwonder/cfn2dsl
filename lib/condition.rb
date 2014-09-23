@@ -1,10 +1,10 @@
 class Condition
   include CfnParser
-  attr_accessor(:name, :evaluations)
+  attr_reader(:name, :evaluations)
 
   def initialize(name, eval)
-    self.name        = name
-    self.evaluations = translate_cfn_functions(eval)
+    @name        = name
+    @evaluations = translate_cfn_functions(eval)
   end
 
   # def to_s
