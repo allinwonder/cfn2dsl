@@ -1,12 +1,11 @@
-Cfn2dsl
-=======
+### Cfn2dsl
 
 cfn2dsl is a tool to enable CloudFormation development team to work on both JSON templates and Ruby DSL code written in `cfndsl` (created by project [cfndsl](https://github.com/stevenjack/cfndsl])).
 
 The idea is to give developer options on developing CloudFormation using the tool and language they feel comfortable and efficient. Some developers like to develop JSON template, and others like to develop with `cfndsl`. We need a tool to sync the developments on both methods, so `cfn2dsl` is here to help. It can parse CloudFormation JSON templates and translate them into `cfndsl` Ruby DSL.
 
-what cfn2dsl can do
-===================
+#### what cfn2dsl can do
+
 
 * it parse CloudFormation JSON template and output `cfndsl` Ruby code
 
@@ -14,8 +13,7 @@ what cfn2dsl can do
 
 * it formats ruby hash/arry objects in a more readable way using `awesome_print`
 
-what cfn2dsl can't do
-=====================
+#### what cfn2dsl can't do
 
 * it is not able to keep your comments in Ruby code, you might need to move the important information out from the Ruby code into README.md
 
@@ -26,8 +24,7 @@ what cfn2dsl can't do
 * it doesn't know the translation of special intrinsic function provides by `cfndsl`, for example `FnFormat()`
 
 
-how to use this tool
-=====================
+#### how to use this tool
 
 ```
 #> gem install cfn2dsl
