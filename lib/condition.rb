@@ -7,7 +7,7 @@ class Condition
     self.evaluations = translate_cfn_functions(eval)
   end
 
-  def to_s
-    %Q^  Condition("#{name}", #{evaluations.ai})^
-  end
+  # def to_s
+  #   %Q^  Condition("#{name}", #{evaluations.ai})^
+  # end
 end
