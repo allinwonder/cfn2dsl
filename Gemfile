@@ -6,6 +6,8 @@ group :development, :test do
   gem 'guard'
   gem 'guard-rspec'
 end
+
+gem 'extlib'
 gem 'awesome_print'
 gem 'ruby-beautify'
 gem 'rubocop'
