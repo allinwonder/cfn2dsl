@@ -55,6 +55,7 @@ CloudFormation do
   if @cfn.mappings
     @cfn.mappings.each do |map|
   %>
+
   Mapping(<%= map.name.dump %>, <%= map.values.ai %>)
   <%
     end
