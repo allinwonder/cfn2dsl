@@ -4,10 +4,6 @@ class Mapping
 
   def initialize(name, values)
     @name   = name
-    @values = translate_cfn_functions(values)
+    @values = parse_cfn_json(values)
   end
-
-  # def to_s
-  #   %Q^  Mapping("#{name}", #{values.ai})^
-  # end
 end

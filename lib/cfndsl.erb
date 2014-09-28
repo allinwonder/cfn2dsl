@@ -1,0 +1,172 @@
+CloudFormation do
+  <% if @cfn.description %>
+  Description(<%= @cfn.description.dump %>)
+  <% end %>
+  <% if @cfn.aws_template_format_version %>
+  AWSTemplateFormatVersion(<%= @cfn.aws_template_format_version.dump %>)
+  <% end %>
+  <% # Parameters %>
+  <%
+  if @cfn.parameters
+    @cfn.parameters.each do |param|
+  %>
+
+  Parameter(<%= param.name.dump %>) do
+    <% if param.description %>
+    Description(<%= param.description.dump %>)
+    <% end %>
+    <% if param.type %>
+    Type(<%= param.type.dump %>)
+    <% end %>
+    <% if param.default %>
+    Default(<%= param.default.dump %>)
+    <% end %>
+    <% if param.allowed_values %>
+    AllowedValues(<%= param.allowed_values.ai %>)
+    <% end %>
+    <% if param.allowed_pattern %>
+    AllowedPattern(<%= param.allowed_pattern.dump %>)
+    <% end %>
+    <% if param.no_echo %>
+    NoEcho(<%= param.no_echo %>)
+    <% end %>
+    <% if param.max_length %>
+    MaxLength(<%= param.max_length.to_i %>)
+    <% end %>
+    <% if param.min_length %>
+    MinLength(<%= param.min_length.to_i %>)
+    <% end %>
+    <% if param.max_value %>
+    MaxValue(<%= param.max_value %>)
+    <% end %>
+    <% if param.min_value %>
+    MinValue(<%= param.min_value %>)
+    <% end %>
+    <% if param.constraint_description %>
+    ConstraintDescription(<%= param.constraint_description.dump %>)
+    <% end %>
+  end
+  <%
+    end
+  end
+  %>
+  <% # Mappings %>
+  <%
+  if @cfn.mappings
+    @cfn.mappings.each do |map|
+  %>
+  Mapping(<%= map.name.dump %>, <%= map.values.ai %>)
+  <%
+    end
+  end
+  %>
+  <% # Conditions %>
+  <%
+  if @cfn.conditions
+    @cfn.conditions.each do |cond|
+  %>
+
+  Condition(<%= cond.name.dump %>, <%= cond.evaluations.ai %>)
+  <%
+    end
+  end
+  %>
+  <% # Resources %>
+  <%
+  @cfn.resources.each do |res|
+  %>
+
+  Resource(<%= res.name.dump %>) do
+    Type("<%= res.type %>")
+    <%
+    if res.deletion_policy
+    %>
+    DeletionPolicy(<%= res.deletion_policy.dump %>)
+    <%
+    end
+    %>
+    <%
+    if res.condition
+    %>
+    Condition(<%= res.condition.dump %>)
+    <%
+    end
+    %>
+    <%
+    if res.update_policy
+    %>
+    UpdatePolicy(<%= value.ai %>)
+    <%
+    end
+    %>
+    <%
+    if res.metadata
+      res.metadata.each_pair do |name, value|
+        if value.instance_of? String
+          value = value.dump
+        else
+          value = value.ai
+        end
+    %>
+    Metadata(<%= name.dump %>, <%= value %>)
+    <%
+      end
+    end
+    %>
+    <%
+    if res.properties
+      res.properties.each_pair do |name, value|
+        if value.instance_of? String
+          value = value.dump
+        else
+          value = value.ai
+        end
+    %>
+    Property(<%= name.dump %>, <%= value %>)
+    <%
+      end
+    end
+    %>
+  end
+  <%
+  end
+  %>
+  <% # Output %>
+  <%
+  if @cfn.outputs
+    @cfn.outputs.each do |out|
+  %>
+
+  Output(<%= out.name.dump %>) do
+    <%
+    if out.condition
+    %>
+    Condition(<%= out.condition.dump %>)
+    <%
+    end
+    %>
+    <%
+    if out.description
+    %>
+    Description(<%= out.description.dump %>)
+    <%
+    end
+    %>
+    <%
+    if out.value
+      if out.value.instance_of? String
+        value = out.value.dump
+      else
+        value = out.value.ai
+      end
+    %>
+    Value(<%= value %>)
+    <%
+    end
+    %>
+  end
+  <%
+    end
+  end
+  %>
+end

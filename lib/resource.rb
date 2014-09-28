@@ -1,67 +1,49 @@
 class Resource
   include CfnParser
 
-  DELETION_POLICY = "DeletionPolicy"
-  DEPEND_ON       = "DependsOn"
-  METADATA        = "Metadata"
-  UPDATE_POLICY   = "UpdatePolicy"
+  ATTRIBUTES = [
+    :deletion_policy,
+    :depends_on,
+    :metadata,
+    :update_policy,
+    :condition,
+    :type,
+    :properties
+  ]
 
-  attr_accessor :name, :type, :properties, :attributes, :condition
+  attr_reader(:name, *ATTRIBUTES)
 
   def initialize(name, json)
-    self.name       = name
-    self.type       = json[TYPE_KEY_NAME]
-    self.attributes = {}
-    if json[PROPERTIES_BLOCK_KEY_NAME].keys.size > 0
-      ps = json[PROPERTIES_BLOCK_KEY_NAME]
-      self.properties = ps.merge(ps) do |k, v|
-        translate_cfn_functions(v)
-      end
-    end
-
-    json.each_pair do |k, v|
-      if attribute? k
-        self.attributes[k] = translate_cfn_functions(v)
-      end
-    end
-
-    if json[CONDITION_KEY_NAME]
-      self.condition  = translate_cfn_functions(json[CONDITION_KEY_NAME])
+    @name = name
+    ATTRIBUTES.each do |a|
+      send(attribute_type(a), json, a.to_s)
     end
   end
 
-  def to_s
-    ss = [%Q^  Resource("#{name}") do^]
-    ss << %Q^    Type("#{type}")^
-    ss << %Q^    Condition("#{condition}")^ if condition
-    if attributes
-      attributes.each_pair do |name, value|
-          ss << %Q^    #{name}(#{value.ai})^
-      end
-    end
-    if properties
-      properties.each_pair do |name, value|
-        ss << %Q^    Property("#{name}", #{value.ai})^
-      end
-    end
-    ss << "  end"
-    ss.join("\n")
-  end
-
-  alias_method :inspect, :to_s
-
-  def attribute?(name)
-    result = false
+  def attribute_type(name)
+    type = ''
     case name
-    when DELETION_POLICY
-      result = true
-    when DEPEND_ON
-      result = true
-    when METADATA
-      result = true
-    when UPDATE_POLICY
-      result = true
+    when name == :properties || name == :metadata
+      type = "complex_attribute"
+    else
+      type = "basic_attribute"
     end
-    return result
+    return type
+  end
+
+  private
+  def complex_attribute(json, name)
+    if json[name.camel_case]
+      values = json[name.camel_case].merge do |k, v|
+        parse_cfn_json(v)
+      end
+      instance_variable_set('@' + name, values)
+    end
+  end
+
+  def basic_attribute(json, name)
+    if json[name.camel_case]
+      instance_variable_set('@' + name, parse_cfn_json(json[name.camel_case]))
+    end
   end
 end

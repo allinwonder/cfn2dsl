@@ -24,12 +24,14 @@ unless options[:template]
   exit 1
 else
   template = JSON.load(File.new(options[:template]))
-  cfndsl   = CloudFormation.from_json(template)
+  cfndsl   = CloudFormation.new(template)
 end
 
 if options[:output]
-  File.open(options[:output], 'w') { |file| file.write(cfndsl.pretty_inspect) }
+  File.open(options[:output], 'w') do |file|
+    file.write(Render.new(cfndsl).cfn_to_cfndsl)
+  end
 else
-  puts cfndsl.to_s
+  puts Render.new(cfndsl).cfn_to_cfndsl
 end
 

@@ -12,7 +12,7 @@ class Parameter
     :min_length,
     :max_value,
     :min_value,
-    :constrain_description
+    :constraint_description
   ]
 
   attr_reader(*ELEMENTS)
@@ -21,7 +21,7 @@ class Parameter
     @name = name
     ELEMENTS.each do |e|
       key_name = e.to_s.camel_case
-      self.instance_variable_set('@' + e.to_s, json[key_name]) if json[key_name]
+      instance_variable_set('@' + e.to_s, json[key_name]) if json[key_name]
     end
   end
 end

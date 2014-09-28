@@ -1,32 +1,15 @@
 require_relative 'spec_helper'
 
 describe Mapping do
+  let(:cfn_file) {File.open("#{File.dirname(__FILE__)}/load-based-auto-scaling.json")}
+  let(:cfn_json) {JSON.parse(cfn_file.read)}
+  let(:name) {"AWSInstanceType2Arch"}
 
-  let(:json) do
-    <<-JSON
-{
-  "Mappings": {
-    "AWSRegionToAMI": {
-      "us-east-1": {
-        "32": "ami-12345678",
-        "64": "ami-abcdefgh"
-      },
-      "us-west-1": {
-        "32": "ami-09876543",
-        "64": "ami-hgfedcba"
-      }
-    }
-  }
-}
-    JSON
-  end
+  subject{ Mapping.new(name, cfn_json["Mappings"][name]) }
 
-  let(:map_name) { "AWSRegionToAMI" }
-  subject{ Mapping.new(map_name, JSON.parse(json)["Mappings"][map_name]) }
-
-  it "creates a mapping ofAWSRegionToAMI" do
-    expect(subject.name).to eq "AWSRegionToAMI"
-    expect(subject.values.keys).to contain_exactly("us-east-1", "us-west-1")
+  it "creates mapping AWSInstanceType2Arch has key value pair m1.xlarge => Arch => 64 " do
+    expect(subject.name).to eq "AWSInstanceType2Arch"
+    expect(subject.values["m1.xlarge"]["Arch"]).to eq "64"
   end
 
 end

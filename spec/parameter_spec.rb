@@ -1,39 +1,27 @@
 require_relative 'spec_helper'
 
 describe Parameter do
+  let(:cfn_file) {File.open("#{File.dirname(__FILE__)}/load-based-auto-scaling.json")}
+  let(:cfn_json) {JSON.parse(cfn_file.read)}
+  let(:name) {"InstanceType"}
 
-  let(:json) do
-    <<-EOF
-      {
-        "DNSDomain": {
-          "Description": "The DNS domain that this VPC will host",
-          "Type": "String",
-          "Default": "this.is.a.fake.domain",
-          "Foo" : "bar"
-        }
-      }
-    EOF
-  end
-
-  let(:name) { "DNSDomain" }
-  subject { Parameter.new(name, JSON.parse(json)[name]) }
+  subject { Parameter.new(name, cfn_json['Parameters']['InstanceType'])}
 
   context("a known element") do
     it "includes the :default attribute with provided value" do
-      expect(subject.default).to eq("this.is.a.fake.domain")
+      expect(subject.default).to eq("m1.small")
     end
   end
 
   context("empty element") do
-    it "excludes :allowed_values attribute" do
-      expect(subject.allowed_values).to be_nil
+    it "excludes :allowed_pattern attribute" do
+      expect(subject.allowed_pattern).to be_nil
     end
   end
 
   context("unknown element") do
     it "never set unknown attribute" do
       expect(subject.instance_variable_get('@foo')).to be_nil
-      expect(subject.instance_variable_get('@Foo')).to be_nil
     end
   end
 end

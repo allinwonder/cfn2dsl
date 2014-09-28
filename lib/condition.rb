@@ -4,10 +4,6 @@ class Condition
 
   def initialize(name, eval)
     @name        = name
-    @evaluations = translate_cfn_functions(eval)
+    @evaluations = parse_cfn_json(eval)
   end
-
-  # def to_s
-  #   %Q^  Condition("#{name}", #{evaluations.ai})^
-  # end
 end

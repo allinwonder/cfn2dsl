@@ -1,26 +1,26 @@
 class Output
   include CfnParser
 
-  VALUE_KEY_NAME = "Value"
+  ATTRIBUTES = [
+    :value,
+    :condition,
+    :description
+  ]
 
-  attr_accessor(:name, :description, :value, :condition)
+  attr_reader(:name, *ATTRIBUTES)
 
   def initialize(name, json)
-    self.name        = name
-    self.value       = json[VALUE_KEY_NAME]
-    self.description = json[DESCRIPTION_KEY_NAME] if json[DESCRIPTION_KEY_NAME]
-    self.condition   = json[CONDITION_KEY_NAME]   if json[CONDITION_KEY_NAME]
+    @name = name
+    ATTRIBUTES.each {|a| attribute(a, json)}
   end
 
-  def to_s
-    ss = [%Q^  Output("#{name.to_s}") do^]
-    ss << %Q^    Value(#{value.to_s})^
-
-    ss << %Q^    Description(#{description.to_s})^  if self.description
-    ss << %Q^    Condition(#{self.condition.to_s})^ if self.condition
-    ss << "  end"
-    ss.join("\n")
+  private
+  def attribute(name, json)
+    key = name.to_s.camel_case
+    if json[key]
+      value = parse_cfn_json(json[key])
+      instance_variable_set("@" + name.to_s, value)
+    end
   end
-  alias_method :inspect, :to_s
 end
 

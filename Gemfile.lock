@@ -10,6 +10,7 @@ GEM
     cfndsl (0.1.5)
     coderay (1.1.0)
     diff-lcs (1.2.5)
+    erubis (2.7.0)
     extlib (0.9.16)
     ffi (1.9.3)
     formatador (0.2.5)
@@ -73,6 +74,7 @@ PLATFORMS
 DEPENDENCIES
   awesome_print
   cfndsl
+  erubis
   extlib
   guard
   guard-rspec
