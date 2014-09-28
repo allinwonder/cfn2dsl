@@ -20,6 +20,7 @@ class Resource
     end
   end
 
+  private
   def attribute_type(name)
     type = ''
     case name
@@ -31,7 +32,6 @@ class Resource
     return type
   end
 
-  private
   def complex_attribute(json, name)
     if json[name.camel_case]
       values = json[name.camel_case].merge do |k, v|
