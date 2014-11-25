@@ -2,8 +2,10 @@ Gem::Specification.new do |s|
   s.name = 'cfn2dsl'
   s.version = '0.1.1'
   s.date = '2014-09-15'
+  s.authors = ["Kevin Yung", "Valen Gunawan"]
   s.summary = "A tool to convert CloudFormation JSON template into a Ruby DSL cfndsl"
   s.description = s.summary
+  s.license = 'MIT'
   s.files = [
     "lib/cfn2dsl.rb",
     "lib/cfn_parser.rb",
@@ -27,5 +29,4 @@ Gem::Specification.new do |s|
   s.add_dependency('ruby-beautify')
   s.add_dependency('rubocop')
   s.add_dependency('erubis')
-
 end
