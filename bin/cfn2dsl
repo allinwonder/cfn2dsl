@@ -17,6 +17,11 @@ OptionParser.new do |opts|
     puts opts
     exit
   end
+
+  opts.on_tail('-v', '--version', 'show the version') do |_v|
+    puts VERSION
+    exit
+  end
 end.parse!
 
 unless options[:template]

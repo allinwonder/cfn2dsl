@@ -20,3 +20,5 @@ AwesomePrint.defaults = {
   :sort_keys => true,
   :plain     => true
 }
+
+VERSION="0.1.1"

@@ -2,7 +2,7 @@ Gem::Specification.new do |s|
   s.name = 'cfn2dsl'
   s.version = '0.1.1'
   s.date = '2014-09-15'
-  s.summary = "This is a tool to translate CloudFormation JSON template into a Ruby DSL cfndsl"
+  s.summary = "A tool to convert CloudFormation JSON template into a Ruby DSL cfndsl"
   s.description = s.summary
   s.files = [
     "lib/cfn2dsl.rb",
