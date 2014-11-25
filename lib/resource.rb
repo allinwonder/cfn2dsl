@@ -24,7 +24,7 @@ class Resource
   def attribute_type(name)
     type = ''
     case name
-    when name == :properties || name == :metadata
+    when name == :properties || name == :metadata || name == :update_policy
       type = "complex_attribute"
     else
       type = "basic_attribute"

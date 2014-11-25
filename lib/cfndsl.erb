@@ -18,8 +18,13 @@ CloudFormation do
     <% if param.type %>
     Type(<%= param.type.dump %>)
     <% end %>
-    <% if param.default %>
-    Default(<%= param.default.dump %>)
+    <% if param.default
+          default_value = param.default
+          if param.default.respond_to? :dump
+            default_value = param.default.dump
+          end
+    %>
+    Default(<%= default_value %>)
     <% end %>
     <% if param.allowed_values %>
     AllowedValues(<%= param.allowed_values.ai %>)
@@ -95,9 +100,16 @@ CloudFormation do
     %>
     <%
     if res.update_policy
+      res.update_policy.each_pair do |name, value|
+        if value.instance_of? String
+          value = value.dump
+        else
+          value = value.ai
+        end
     %>
-    UpdatePolicy(<%= value.ai %>)
+    UpdatePolicy(<%= name.dump %>,<%= value %>)
     <%
+      end
     end
     %>
     <%
