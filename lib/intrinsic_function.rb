@@ -110,6 +110,12 @@ class IntrinsicFunction
   end
 
   def fn_get_a_zs
-    return "FnGetAZs(\"#{@parameters.gsub('"'){'\\"'}}\")"
+    if @parameters.instance_of? String
+      value = '"' + @parameters.gsub('"'){'\\"'} + '"'
+    else
+      value = @parameters.ai
+    end
+    
+    return "FnGetAZs(#{value})"
   end
 end
