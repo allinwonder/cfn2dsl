@@ -8,7 +8,8 @@ class Resource
     :update_policy,
     :condition,
     :type,
-    :properties
+    :properties,
+    :creation_policy
   ]
 
   attr_reader(:name, *ATTRIBUTES)
@@ -24,7 +25,11 @@ class Resource
   def attribute_type(name)
     type = ''
     case name
-    when name == :properties || name == :metadata || name == :update_policy
+    when name == :properties    ||
+         name == :metadata      || 
+         name == :update_policy ||
+         name == :depends_on    || 
+         name == :creation_policy
       type = "complex_attribute"
     else
       type = "basic_attribute"

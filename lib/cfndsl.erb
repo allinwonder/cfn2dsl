@@ -85,6 +85,13 @@ CloudFormation do
   Resource(<%= res.name.dump %>) do
     Type("<%= res.type %>")
     <%
+    if res.creation_policy
+    %>
+    CreationPolicy(<%= res.creation_policy.dump %>)
+    <%
+    end
+    %>
+    <%
     if res.deletion_policy
     %>
     DeletionPolicy(<%= res.deletion_policy.dump %>)
@@ -124,6 +131,13 @@ CloudFormation do
     Metadata(<%= name.dump %>, <%= value %>)
     <%
       end
+    end
+    %>
+    <%
+    if res.depends_on
+    %>
+    DependsOn(<%= res.depends_on.dump %>)
+    <%
     end
     %>
     <%
