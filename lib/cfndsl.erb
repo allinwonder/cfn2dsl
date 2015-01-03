@@ -135,8 +135,13 @@ CloudFormation do
     %>
     <%
     if res.depends_on
+      if res.depends_on.instance_of? String
+        value = res.depends_on.dump
+      else
+        value = res.depends_on.ai
+      end
     %>
-    DependsOn(<%= res.depends_on.dump %>)
+    DependsOn(<%= value %>)
     <%
     end
     %>
