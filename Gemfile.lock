@@ -79,5 +79,6 @@ DEPENDENCIES
   guard
   guard-rspec
   rake
+  rspec
   rubocop
   ruby-beautify

@@ -1,11 +1,11 @@
-require_relative 'spec_helper'
+require 'spec_helper'
 
-describe Output do
+RSpec.describe Output do
   let(:cfn_file) {File.open("#{File.dirname(__FILE__)}/basic-amazon-redshift-cluster.json")}
   let(:cfn_json) {JSON.parse(cfn_file.read)}
 
   let(:name) {"ClusterEndpoint"}
-  subject {Output.new(name, cfn_json['Outputs'][name])}
+  subject {described_class.new(name, cfn_json['Outputs'][name])}
 
   it "has name ClusterEndpoint" do
     expect(subject.name).to eq "ClusterEndpoint"
@@ -17,5 +17,4 @@ describe Output do
     expect(subject.value.name).to eq("Fn::Join")
     expect(subject.value.parameters.first).to eq ":"
   end
-
 end

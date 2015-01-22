@@ -1,19 +1,26 @@
-require_relative 'spec_helper'
+require 'spec_helper'
 
-describe IntrinsicFunction do
+RSpec.describe IntrinsicFunction do
+  subject { described_class.new(name, input) }
 
-
-  it "creates intrinsic function Fn::Select()" do
-    fn = IntrinsicFunction.new("Fn::Select", [0, [ "apples", "grapes", "oranges", "mangoes" ]])
-
-    expect(fn.name).to eq "Fn::Select"
-    expect(fn.parameters).to eq [0, [ "apples", "grapes", "oranges", "mangoes" ]]
+  shared_examples_for 'an intrinsic function' do
+    it "creates an intrinsic function" do
+      expect(subject.name).to eq(name)
+      expect(subject.parameters).to eq(input)
+    end
   end
 
-  it "creates intrinsic function Ref('AWS::Region')" do
-    fn = IntrinsicFunction.new("Ref", "AWS::Region")
+  context 'Fn::Select()' do
+    let(:name) { 'Fn::Select' }
+    let(:input) { [0, [ "apples", "grapes", "oranges", "mangoes" ]] }
 
-    expect(fn.name).to eq "Ref"
-    expect(fn.parameters).to eq "AWS::Region"
+    it_behaves_like 'an intrinsic function'
+  end
+
+  context 'Ref("AWS::Region")' do
+    let(:name) { 'Ref' }
+    let(:input) { 'AWS::Region' }
+
+    it_behaves_like 'an intrinsic function'
   end
 end
