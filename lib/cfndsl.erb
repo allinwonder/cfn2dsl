@@ -86,9 +86,16 @@ CloudFormation do
     Type("<%= res.type %>")
     <%
     if res.creation_policy
+      res.creation_policy.each_pair do |name, value|
+        if value.instance_of? String
+          value = value.dump
+        else
+          value = value.ai
+        end
     %>
-    CreationPolicy(<%= res.creation_policy.dump %>)
+    CreationPolicy(<%= name.dump%>, <%= value %>)
     <%
+      end
     end
     %>
     <%
