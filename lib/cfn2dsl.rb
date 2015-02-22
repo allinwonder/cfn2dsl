@@ -13,6 +13,7 @@ require 'output'
 require 'parameter'
 require 'resource'
 require 'render'
+require 'version'
 
 AwesomePrint.defaults = {
   :indent    => -2,
@@ -21,4 +22,3 @@ AwesomePrint.defaults = {
   :plain     => true
 }
 
-VERSION="0.1.5"

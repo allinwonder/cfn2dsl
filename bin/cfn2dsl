@@ -3,7 +3,7 @@ require_relative '../lib/cfn2dsl'
 
 USAGE = "Usage: #{File.basename(__FILE__)} -t|--template file [-o|--output file]"
 options = {}
-OptionParser.new do |opts|
+op = OptionParser.new do |opts|
   opts.banner = USAGE
   opts.on('-t', '--template file', 'Template file path') do |v|
     options[:template] = v
@@ -19,13 +19,15 @@ OptionParser.new do |opts|
   end
 
   opts.on_tail('-v', '--version', 'show the version') do |_v|
-    puts VERSION
+    puts Cfn2dsl::VERSION
     exit
   end
-end.parse!
+end
+
+op.parse!
 
 unless options[:template]
-  puts USAGE
+  puts op
   exit 1
 else
   template = JSON.load(File.new(options[:template]))
