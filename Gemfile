@@ -10,6 +10,4 @@ end
 
 gem 'extlib'
 gem 'awesome_print'
-gem 'ruby-beautify'
-gem 'rubocop'
 gem 'erubis'
