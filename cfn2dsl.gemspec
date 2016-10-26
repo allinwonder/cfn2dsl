@@ -22,7 +22,7 @@ Gem::Specification.new do |s|
   s.bindir = 'bin'
   s.executables << 'cfn2dsl'
   s.homepage = 'https://github.com/realestate-com-au/cfn2dsl.git'
-  s.authors = 'kevin yung (kevin.yung@rea-group.com)'
+  s.authors = 'kevin yung (jwrong@gmail.com)'
   s.required_ruby_version = '>= 2.0.0'
   s.add_dependency('extlib')
   s.add_dependency('awesome_print')
