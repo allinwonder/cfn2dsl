@@ -17,8 +17,6 @@ The idea is to give developers options for developing CloudFormation configurati
 
 * It is not able to keep your comments in the Ruby source, so you might need to move any important information that exists in comments out from the Ruby code into a README file.
 
-* It currently doesn't know how to translate CloudForamtion resource into the abstracted objects used in `cfndsl`, for example `EC2_Instance`.
-
 * It can't reproduce your programming logic in your `cfndsl` template if you rely on Ruby code to do interesting things, for example environment variables. (You might need to think about using CloudFormation Conditions to achieve an environment switch.)
 
 * It doesn't know how to translate special intrinsic functionality provided by `cfndsl`, for example `FnFormat()`.
