@@ -11,6 +11,5 @@ class Render
     input = File.read("#{File.dirname(__FILE__)}/cfndsl.erb")
     context = { :cfn => @cfn }
     Erubis::Eruby.new(input).evaluate(context).to_s
-    #Erubis::Eruby.new(input).evaluate(context).to_s.gsub('"', '\'')
   end
 end
