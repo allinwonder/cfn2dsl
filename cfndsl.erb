@@ -1,0 +1,216 @@
+# frozen_string_literal: true
+CloudFormation do
+  <% if @cfn.description %>
+  Description '<%= @cfn.description %>'
+  <% end %>
+  <% if @cfn.aws_template_format_version %>
+  AWSTemplateFormatVersion '<%= @cfn.aws_template_format_version %>'
+  <% end %>
+  <% # Parameters %>
+  <%
+  if @cfn.parameters
+    @cfn.parameters.each do |param|
+  %>
+
+  Parameter('<%= param.name %>') do
+    <% if param.description %>
+    Description '<%= param.description %>'
+    <% end %>
+    <% if param.type %>
+    Type '<%= param.type %>'
+    <% end %>
+    <% if param.default
+          default_value = param.default
+          if param.default.respond_to? :dump
+            default_value = '\'' + param.default + '\''
+          end
+    %>
+    Default <%= default_value %>
+    <% end %>
+    <% if param.allowed_values %>
+    AllowedValues '<%= param.allowed_values.ai.gsub('"', '\'') %>'
+    <% end %>
+    <% if param.allowed_pattern %>
+    AllowedPattern '<%= param.allowed_pattern %>'
+    <% end %>
+    <% if param.no_echo %>
+    NoEcho <%= param.no_echo %>
+    <% end %>
+    <% if param.max_length %>
+    MaxLength <%= param.max_length.to_i %>
+    <% end %>
+    <% if param.min_length %>
+    MinLength <%= param.min_length.to_i %>
+    <% end %>
+    <% if param.max_value %>
+    MaxValue <%= param.max_value %>
+    <% end %>
+    <% if param.min_value %>
+    MinValue <%= param.min_value %>
+    <% end %>
+    <% if param.constraint_description %>
+    ConstraintDescription '<%= param.constraint_description %>'
+    <% end %>
+  end
+  <%
+    end
+  end
+  %>
+  <% # Mappings %>
+  <%
+  if @cfn.mappings
+    @cfn.mappings.each do |map|
+  %>
+
+  Mapping '<%= map.name %>' '<%= map.values.ai.gsub('"', '\'') %>'
+  <%
+    end
+  end
+  %>
+  <% # Conditions %>
+  <%
+  if @cfn.conditions
+    @cfn.conditions.each do |cond|
+  %>
+
+  Condition('<%= cond.name %>', <%= cond.evaluations.ai.gsub('"', '\'') %>)
+  <%
+    end
+  end
+  %>
+  <% # Resources %>
+  <%
+  @cfn.resources.each do |res|
+  %>
+  <%
+    resname = res.name
+    restype = res.type
+    restype = restype.split('::').delete_if{|i|i=='AWS'}
+    restype = restype.join('::').gsub('::', '_')
+   %>
+  <%= restype %>('<%= resname %>') do
+    <%
+    if res.creation_policy
+      res.creation_policy.each_pair do |name, value|
+        if value.instance_of? String
+          value = '\'' + value + '\''
+        else
+          value = value.ai.gsub('"', '\'')
+        end
+    %>
+    CreationPolicy('<%= name %>', <%= value %>)
+    <%
+      end
+    end
+    %>
+    <%
+    if res.deletion_policy
+    %>
+    DeletionPolicy '<%= res.deletion_policy %>)'
+    <%
+    end
+    %>
+    <%
+    if res.condition
+    %>
+    Condition '<%= res.condition %>'
+    <%
+    end
+    %>
+    <%
+    if res.update_policy
+      res.update_policy.each_pair do |name, value|
+        if value.instance_of? String
+          value = "'#{value}'"
+        else
+          value = value.ai.gsub('"', '\'').gsub('{', '').gsub('}', '').chop
+        end
+    %>
+    UpdatePolicy('<%= name %>',<%= value %>)
+    <%
+      end
+    end
+    %>
+    <%
+    if res.metadata
+      res.metadata.each_pair do |name, value|
+        if value.instance_of? String
+          value = value
+        else
+          value = value.ai.gsub('"', '\'')
+        end
+    %>
+    Metadata '<%= name %>' '<%= value %>'
+    <%
+      end
+    end
+    %>
+    <%
+    if res.depends_on
+      if res.depends_on.instance_of? String
+        value = '\'' + res.depends_on + '\''
+      else
+        value = res.depends_on.ai.gsub('"', '\'')
+      end
+    %>
+    DependsOn(<%= value %>)
+    <%
+    end
+    %>
+    <%
+    if res.properties
+      res.properties.each_pair do |name, value|
+        if value.instance_of? String
+          value = '\'' + value + '\''
+        else
+          value = value.ai.gsub('"', '\'').gsub(/^\]$/, '    ]')
+        end
+    %>
+    <%= name  %> <%= value %>
+    <%
+      end
+    end
+    %>
+  end
+  <%
+  end
+  %>
+  <% # Output %>
+  <%
+  if @cfn.outputs
+    @cfn.outputs.each do |out|
+  %>
+
+  Output('<%= out.name %>') do
+    <%
+    if out.condition
+    %>
+    Condition('<%= out.condition %>')
+    <%
+    end
+    %>
+    <%
+    if out.description
+    %>
+    Description('<%= out.description %>')
+    <%
+    end
+    %>
+    <%
+    if out.value
+      if out.value.instance_of? String
+        value = '\'' + out.value + '\''
+      else
+        value = out.value.ai.gsub('"', '\'')
+      end
+    %>
+    Value(<%= value %>)
+    <%
+    end
+    %>
+  end
+  <%
+    end
+  end
+  %>
+end
