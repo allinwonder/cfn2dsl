@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 CloudFormation do
   <% if @cfn.description %>
   Description '<%= @cfn.description %>'
@@ -27,7 +28,7 @@ CloudFormation do
     Default <%= default_value %>
     <% end %>
     <% if param.allowed_values %>
-    AllowedValues '<%= param.allowed_values.ai %>'
+    AllowedValues '<%= param.allowed_values.ai.gsub('"', '\'') %>'
     <% end %>
     <% if param.allowed_pattern %>
     AllowedPattern '<%= param.allowed_pattern %>'
@@ -61,7 +62,7 @@ CloudFormation do
     @cfn.mappings.each do |map|
   %>
 
-  Mapping '<%= map.name %>' '<%= map.values.ai %>'
+  Mapping '<%= map.name %>' '<%= map.values.ai.gsub('"', '\'') %>'
   <%
     end
   end
@@ -72,7 +73,7 @@ CloudFormation do
     @cfn.conditions.each do |cond|
   %>
 
-  Condition('<%= cond.name %>', <%= cond.evaluations.ai %>)
+  Condition('<%= cond.name %>', <%= cond.evaluations.ai.gsub('"', '\'') %>)
   <%
     end
   end
@@ -94,7 +95,7 @@ CloudFormation do
         if value.instance_of? String
           value = '\'' + value + '\''
         else
-          value = value.ai
+          value = value.ai.gsub('"', '\'')
         end
     %>
     CreationPolicy('<%= name %>', <%= value %>)
@@ -122,10 +123,10 @@ CloudFormation do
         if value.instance_of? String
           value = "'#{value}'"
         else
-          value = value.ai
+          value = value.ai.gsub('"', '\'')
         end
     %>
-    UpdatePolicy('<%= name %>',<%= value %>)
+    UpdatePolicy('<%= name %>', <%= value %>)
     <%
       end
     end
@@ -136,7 +137,7 @@ CloudFormation do
         if value.instance_of? String
           value = value
         else
-          value = value.ai
+          value = value.ai.gsub('"', '\'')
         end
     %>
     Metadata '<%= name %>' '<%= value %>'
@@ -149,7 +150,7 @@ CloudFormation do
       if res.depends_on.instance_of? String
         value = '\'' + res.depends_on + '\''
       else
-        value = res.depends_on.ai
+        value = res.depends_on.ai.gsub('"', '\'')
       end
     %>
     DependsOn(<%= value %>)
@@ -162,7 +163,7 @@ CloudFormation do
         if value.instance_of? String
           value = '\'' + value + '\''
         else
-          value = value.ai
+          value = value.ai.gsub('"', '\'')
         end
     %>
     <%= name  %> <%= value %>
@@ -200,7 +201,7 @@ CloudFormation do
       if out.value.instance_of? String
         value = '\'' + out.value + '\''
       else
-        value = out.value.ai
+        value = out.value.ai.gsub('"', '\'')
       end
     %>
     Value(<%= value %>)

@@ -1,7 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    awesome_print (1.6.1)
+    awesome_print (1.7.0)
     celluloid (0.16.0)
       timers (~> 4.0.0)
     cfndsl (0.1.11)
@@ -75,3 +75,6 @@ DEPENDENCIES
   guard-rspec
   rake
   rspec
+
+BUNDLED WITH
+   1.13.5
