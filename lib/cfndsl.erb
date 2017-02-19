@@ -123,10 +123,10 @@ CloudFormation do
         if value.instance_of? String
           value = "'#{value}'"
         else
-          value = value.ai.gsub('"', '\'')
+          value = value.ai.gsub('"', '\'').gsub('{', '').gsub('}', '').chop
         end
     %>
-    UpdatePolicy('<%= name %>', <%= value %>)
+    UpdatePolicy('<%= name %>',<%= value %>)
     <%
       end
     end
@@ -163,7 +163,7 @@ CloudFormation do
         if value.instance_of? String
           value = '\'' + value + '\''
         else
-          value = value.ai.gsub('"', '\'')
+          value = value.ai.gsub('"', '\'').gsub(/^\]$/, '    ]')
         end
     %>
     <%= name  %> <%= value %>
