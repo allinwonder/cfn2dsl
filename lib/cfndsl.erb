@@ -1,9 +1,9 @@
 CloudFormation do
   <% if @cfn.description %>
-  Description(<%= @cfn.description.dump %>)
+  Description '<%= @cfn.description %>'
   <% end %>
   <% if @cfn.aws_template_format_version %>
-  AWSTemplateFormatVersion(<%= @cfn.aws_template_format_version.dump %>)
+  AWSTemplateFormatVersion '<%= @cfn.aws_template_format_version %>'
   <% end %>
   <% # Parameters %>
   <%
@@ -11,44 +11,44 @@ CloudFormation do
     @cfn.parameters.each do |param|
   %>
 
-  Parameter(<%= param.name.dump %>) do
+  Parameter('<%= param.name %>') do
     <% if param.description %>
-    Description(<%= param.description.dump %>)
+    Description '<%= param.description %>'
     <% end %>
     <% if param.type %>
-    Type(<%= param.type.dump %>)
+    Type '<%= param.type %>'
     <% end %>
     <% if param.default
           default_value = param.default
           if param.default.respond_to? :dump
-            default_value = param.default.dump
+            default_value = '\'' + param.default + '\''
           end
     %>
-    Default(<%= default_value %>)
+    Default <%= default_value %>
     <% end %>
     <% if param.allowed_values %>
-    AllowedValues(<%= param.allowed_values.ai %>)
+    AllowedValues '<%= param.allowed_values.ai %>'
     <% end %>
     <% if param.allowed_pattern %>
-    AllowedPattern(<%= param.allowed_pattern.dump %>)
+    AllowedPattern '<%= param.allowed_pattern %>'
     <% end %>
     <% if param.no_echo %>
-    NoEcho(<%= param.no_echo %>)
+    NoEcho <%= param.no_echo %>
     <% end %>
     <% if param.max_length %>
-    MaxLength(<%= param.max_length.to_i %>)
+    MaxLength <%= param.max_length.to_i %>
     <% end %>
     <% if param.min_length %>
-    MinLength(<%= param.min_length.to_i %>)
+    MinLength <%= param.min_length.to_i %>
     <% end %>
     <% if param.max_value %>
-    MaxValue(<%= param.max_value %>)
+    MaxValue <%= param.max_value %>
     <% end %>
     <% if param.min_value %>
-    MinValue(<%= param.min_value %>)
+    MinValue <%= param.min_value %>
     <% end %>
     <% if param.constraint_description %>
-    ConstraintDescription(<%= param.constraint_description.dump %>)
+    ConstraintDescription '<%= param.constraint_description %>'
     <% end %>
   end
   <%
@@ -61,7 +61,7 @@ CloudFormation do
     @cfn.mappings.each do |map|
   %>
 
-  Mapping(<%= map.name.dump %>, <%= map.values.ai %>)
+  Mapping '<%= map.name %>' '<%= map.values.ai %>'
   <%
     end
   end
@@ -72,7 +72,7 @@ CloudFormation do
     @cfn.conditions.each do |cond|
   %>
 
-  Condition(<%= cond.name.dump %>, <%= cond.evaluations.ai %>)
+  Condition('<%= cond.name %>', <%= cond.evaluations.ai %>)
   <%
     end
   end
@@ -81,19 +81,23 @@ CloudFormation do
   <%
   @cfn.resources.each do |res|
   %>
-
-  Resource(<%= res.name.dump %>) do
-    Type("<%= res.type %>")
+  <%
+    resname = res.name
+    restype = res.type
+    restype = restype.split('::').delete_if{|i|i=='AWS'}
+    restype = restype.join('::').gsub('::', '_')
+   %>
+  <%= restype %>('<%= resname %>') do
     <%
     if res.creation_policy
       res.creation_policy.each_pair do |name, value|
         if value.instance_of? String
-          value = value.dump
+          value = '\'' + value + '\''
         else
           value = value.ai
         end
     %>
-    CreationPolicy(<%= name.dump%>, <%= value %>)
+    CreationPolicy('<%= name %>', <%= value %>)
     <%
       end
     end
@@ -101,14 +105,14 @@ CloudFormation do
     <%
     if res.deletion_policy
     %>
-    DeletionPolicy(<%= res.deletion_policy.dump %>)
+    DeletionPolicy '<%= res.deletion_policy %>)'
     <%
     end
     %>
     <%
     if res.condition
     %>
-    Condition(<%= res.condition.dump %>)
+    Condition '<%= res.condition %>'
     <%
     end
     %>
@@ -116,12 +120,12 @@ CloudFormation do
     if res.update_policy
       res.update_policy.each_pair do |name, value|
         if value.instance_of? String
-          value = value.dump
+          value = "'#{value}'"
         else
           value = value.ai
         end
     %>
-    UpdatePolicy(<%= name.dump %>,<%= value %>)
+    UpdatePolicy('<%= name %>',<%= value %>)
     <%
       end
     end
@@ -130,12 +134,12 @@ CloudFormation do
     if res.metadata
       res.metadata.each_pair do |name, value|
         if value.instance_of? String
-          value = value.dump
+          value = value
         else
           value = value.ai
         end
     %>
-    Metadata(<%= name.dump %> => <%= value %>)
+    Metadata '<%= name %>' '<%= value %>'
     <%
       end
     end
@@ -143,7 +147,7 @@ CloudFormation do
     <%
     if res.depends_on
       if res.depends_on.instance_of? String
-        value = res.depends_on.dump
+        value = '\'' + res.depends_on + '\''
       else
         value = res.depends_on.ai
       end
@@ -156,12 +160,12 @@ CloudFormation do
     if res.properties
       res.properties.each_pair do |name, value|
         if value.instance_of? String
-          value = value.dump
+          value = '\'' + value + '\''
         else
           value = value.ai
         end
     %>
-    Property(<%= name.dump %>, <%= value %>)
+    <%= name  %> <%= value %>
     <%
       end
     end
@@ -176,25 +180,25 @@ CloudFormation do
     @cfn.outputs.each do |out|
   %>
 
-  Output(<%= out.name.dump %>) do
+  Output('<%= out.name %>') do
     <%
     if out.condition
     %>
-    Condition(<%= out.condition.dump %>)
+    Condition('<%= out.condition %>')
     <%
     end
     %>
     <%
     if out.description
     %>
-    Description(<%= out.description.dump %>)
+    Description('<%= out.description %>')
     <%
     end
     %>
     <%
     if out.value
       if out.value.instance_of? String
-        value = out.value.dump
+        value = '\'' + out.value + '\''
       else
         value = out.value.ai
       end

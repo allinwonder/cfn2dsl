@@ -20,11 +20,11 @@ class IntrinsicFunction
   private
   def fn_base64
     if @parameters.instance_of? String
-      value = '"' + @parameters.gsub('"'){'\\"'} + '"'
+      value = "'#{@parameters}'"
     else
       value = @parameters.ai
     end
-    return "FnBase64(#{value})"
+    return "FnBase64 '#{value}'"
   end
 
   def fn_select
@@ -32,7 +32,7 @@ class IntrinsicFunction
   end
 
   def ref
-    return "Ref(\"#{@parameters.gsub('"'){'\\"'}}\")"
+    return "Ref('#{@parameters.gsub('\''){'\\\''}}')"
   end
 
   def fn_and
@@ -41,13 +41,13 @@ class IntrinsicFunction
 
   def fn_equals
     if @parameters[0].instance_of? String
-      arg1 = '"' + @parameters[0].gsub('"'){'\\"'} + '"'
+      arg1 = '\'' + @parameters[0].gsub('\''){'\\\''} + '\''
     else
       arg1 = @parameters[0].ai
     end
 
     if @parameters[1].instance_of? String
-      arg2 = '"' + @parameters[1].gsub('"'){'\\"'} + '"'
+      arg2 = '\'' + @parameters[1].gsub('\''){'\\\''} + '\''
     else
       arg2 = @parameters[1].ai
     end
@@ -56,15 +56,15 @@ class IntrinsicFunction
   end
 
   def fn_if
-    cond_name = '"' + @parameters[0].gsub('"'){'\\"'} + '"'
+    cond_name = '\'' + @parameters[0].gsub('\''){'\\\''} + '\''
     if @parameters[1].instance_of? String
-      true_value = '"' + @parameters[1].gsub('"'){'\\"'} + '"'
+      true_value = '\'' + @parameters[1].gsub('\''){'\\\''} + '\''
     else
       true_value = @parameters[1].ai
     end
 
     if @parameters[2].instance_of? String
-      false_value = '"' + @parameters[2].gsub('"'){'\\"'} + '"'
+      false_value = '\'' + @parameters[2].gsub('\''){'\\\''} + '\''
     else
       false_value = @parameters[2].ai
     end
@@ -80,16 +80,16 @@ class IntrinsicFunction
   end
 
   def fn_find_in_map
-    map_name = '"' + @parameters[0] + '"'
+    map_name = '\'' + @parameters[0] + '\''
 
     if @parameters[1].instance_of? String
-      top_level_key = '"' + @parameters[1] + '"'
+      top_level_key = '\'' + @parameters[1] + '\''
     else
       top_level_key = @parameters[1].ai
     end
 
     if @parameters[2].instance_of? String
-      sec_level_key = '"' + @parameters[2] + '"'
+      sec_level_key = '\'' + @parameters[2] + '\''
     else
       sec_level_key = @parameters[2].ai
     end
@@ -98,20 +98,20 @@ class IntrinsicFunction
   end
 
   def fn_get_att
-    resource_name = '"' + @parameters[0] + '"'
-    attr_name     = '"' + @parameters[1] + '"'
+    resource_name = '\'' + @parameters[0] + '\''
+    attr_name     = '\'' + @parameters[1] + '\''
     return "FnGetAtt(#{resource_name}, #{attr_name})"
   end
 
   def fn_join
-    seperator = '"' + @parameters[0].gsub('"'){'\\"'} + '"'
+    seperator = '\'' + @parameters[0].gsub('\''){'\\\''} + '\''
     values    = @parameters[1].ai
     return "FnJoin(#{seperator}, #{values})"
   end
 
   def fn_get_a_zs
     if @parameters.instance_of? String
-      value = '"' + @parameters.gsub('"'){'\\"'} + '"'
+      value = '\'' + @parameters.gsub('\''){'\\\''} + '\''
     else
       value = @parameters.ai
     end
