@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'cfn2dsl'
-  s.version = '0.1.5'
+  s.version = '0.1.7'
   s.date = '2014-09-15'
   s.authors = ["Kevin Yung", "Valen Gunawan"]
   s.summary = "A tool to convert CloudFormation JSON template into a Ruby DSL cfndsl"
