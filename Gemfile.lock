@@ -69,6 +69,7 @@ DEPENDENCIES
   extlib
   guard
   guard-rspec
+  pry
   rake
   rspec
 
