@@ -1,4 +1,4 @@
-### Cfn2dsl [![Build Status](https://travis-ci.org/realestate-com-au/cfn2dsl.svg?branch=master)](https://travis-ci.org/realestate-com-au/cfn2dsl) 
+### Cfn2dsl [![Build Status](https://travis-ci.org/allinwonder/cfn2dsl.svg?branch=master)](https://travis-ci.org/allinwonder/cfn2dsl) 
 
 cfn2dsl is a tool to enable CloudFormation development teams to work with both JSON templates and Ruby DSL code written in `cfndsl` (created by [cfndsl](https://github.com/stevenjack/cfndsl) project).
 
