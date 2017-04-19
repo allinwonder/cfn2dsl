@@ -1,6 +1,8 @@
+$LOAD_PATH.unshift(File.dirname(__FILE__) + "/lib")
+require "version" 
 Gem::Specification.new do |s|
   s.name = 'cfn2dsl'
-  s.version = '0.1.9'
+  s.version = Cfn2dsl::VERSION
   s.date = Time.now().strftime("%Y-%m-%d")
   s.authors = ["Kevin Yung", "Valen Gunawan"]
   s.summary = "A tool to convert CloudFormation JSON template into a Ruby DSL cfndsl"
@@ -17,7 +19,8 @@ Gem::Specification.new do |s|
     "lib/output.rb",
     "lib/parameter.rb",
     "lib/render.rb",
-    "lib/resource.rb"
+    "lib/resource.rb",
+    "lib/version.rb"
   ]
   s.bindir = 'bin'
   s.executables << 'cfn2dsl'
