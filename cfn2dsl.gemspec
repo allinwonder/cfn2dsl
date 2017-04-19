@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'cfn2dsl'
-  s.version = '0.1.8'
+  s.version = '0.1.9'
   s.date = Time.now().strftime("%Y-%m-%d")
   s.authors = ["Kevin Yung", "Valen Gunawan"]
   s.summary = "A tool to convert CloudFormation JSON template into a Ruby DSL cfndsl"
@@ -24,7 +24,7 @@ Gem::Specification.new do |s|
   s.homepage = 'https://github.com/allinwonder/cfn2dsl.git'
   s.email = 'jwrong@gmail.com'
   s.required_ruby_version = '>= 2.3.0'
-  s.add_dependency('extlib', '2.7.0')
+  s.add_dependency('extlib', '0.9.16')
   s.add_dependency('awesome_print', '1.7.0')
   s.add_dependency('erubis', '2.7.0')
 end
