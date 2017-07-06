@@ -7,6 +7,8 @@ class CloudFormation
     :conditions,
     :outputs,
     :mappings,
+    :rules,
+    :metadata,
     :description,
     :aws_template_format_version
   ]
@@ -51,6 +53,10 @@ class CloudFormation
   def complex_parser(name, json)
     elms = []
     case name
+    when :metadata
+      json.each_pair { |k, v| elms << Metadata.new(k, v) }
+    when :rules
+      json.each_pair { |k, v| elms << Rules.new(k, v) }
     when :parameters
       json.each_pair { |k, v| elms << Parameter.new(k, v) }
     when :resources
