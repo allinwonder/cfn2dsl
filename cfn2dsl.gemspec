@@ -20,7 +20,9 @@ Gem::Specification.new do |s|
     "lib/parameter.rb",
     "lib/render.rb",
     "lib/resource.rb",
-    "lib/version.rb"
+    "lib/version.rb",
+    "lib/metadata.rb",
+    "lib/rules.rb",
   ]
   s.bindir = 'bin'
   s.executables << 'cfn2dsl'
