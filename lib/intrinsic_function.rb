@@ -109,6 +109,23 @@ class IntrinsicFunction
     return "FnJoin(#{seperator}, #{values})"
   end
 
+  def fn_sub
+    origin = '"' + @parameters[0].gsub('"'){'\\"'} + '"'
+    values    = @parameters[1].ai
+    return "FnSub(#{origin}, #{values})"
+  end
+
+  def fn_split
+    delimiter = '"' + @parameters[0].gsub('"'){'\\"'} + '"'
+    value     = '"' + @parameters[1] + '"'
+    return "FnSplit(#{delimiter}, #{value})"
+  end
+
+  def fn_import_value
+    value     = '"' + @parameters[0] + '"'
+    return "FnImportValue(#{value})"
+  end
+
   def fn_get_a_zs
     if @parameters.instance_of? String
       value = '\'' + @parameters.gsub('\''){'\\\''} + '\''
@@ -118,4 +135,6 @@ class IntrinsicFunction
     
     return "FnGetAZs(#{value})"
   end
+  
+
 end

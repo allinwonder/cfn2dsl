@@ -1,6 +1,7 @@
 require 'json'
 require 'rspec'
 require 'cfn2dsl'
+require 'pry'
 
 RSpec.configure do |config|
   config.filter_run :focus
