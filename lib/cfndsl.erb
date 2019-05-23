@@ -28,7 +28,11 @@ CloudFormation do
     Default <%= default_value %>
     <% end %>
     <% if param.allowed_values %>
+    <% if param.allowed_values.kind_of?(Array) %>
+    AllowedValues <%= param.allowed_values.ai.gsub('"', '\'').gsub('  ', '      ').gsub(/^\]$/, '    ]').gsub(/^\}$/, '    }') %>
+    <% else %>
     AllowedValues '<%= param.allowed_values.ai.gsub('"', '\'') %>'
+    <% end %>
     <% end %>
     <% if param.allowed_pattern %>
     AllowedPattern '<%= param.allowed_pattern %>'
@@ -73,7 +77,7 @@ CloudFormation do
     @cfn.conditions.each do |cond|
   %>
 
-  Condition('<%= cond.name %>', <%= cond.evaluations.ai.gsub('"', '\'') %>)
+  Condition('<%= cond.name %>', <%= cond.evaluations.ai.gsub('"', '\'').gsub('  ', '    ').gsub(/^\]/, '  ]').gsub(/^\)/, '  )') %>)
   <%
     end
   end
@@ -160,14 +164,25 @@ CloudFormation do
     <%
     if res.properties
       res.properties.each_pair do |name, value|
+        is_value_string = true
         if value.instance_of? String
           value = '\'' + value + '\''
         else
-          value = value.ai.gsub('"', '\'').gsub(/^\]$/, '    ]')
+          is_value_string = false
+          value = value.ai.gsub('"', '\'')
+          .gsub('  ', '      ')
+          .gsub(/^\]$/, '    ]')
+          .gsub(/^\}$/, '    }')
+          .gsub(/[ ]+=>/, ' =>')
         end
+
+        if is_value_string
     %>
     <%= name  %> <%= value %>
+    <% else %>
+    <%= name  %>(<%= value %>)
     <%
+        end
       end
     end
     %>
@@ -185,14 +200,14 @@ CloudFormation do
     <%
     if out.condition
     %>
-    Condition('<%= out.condition %>')
+    Condition '<%= out.condition %>'
     <%
     end
     %>
     <%
     if out.description
     %>
-    Description('<%= out.description %>')
+    Description '<%= out.description %>'
     <%
     end
     %>
@@ -204,7 +219,7 @@ CloudFormation do
         value = out.value.ai.gsub('"', '\'')
       end
     %>
-    Value(<%= value %>)
+    Value <%= value %>
     <%
     end
     %>
