@@ -16,6 +16,7 @@ require 'render'
 require 'version'
 require 'rules'
 require 'metadata'
+require 'yaml_support'
 
 AwesomePrint.defaults = {
   :indent    => -2,

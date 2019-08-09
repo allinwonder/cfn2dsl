@@ -50,9 +50,9 @@ class CloudFormation
     return false
   end
     
-  def parse_element(elm_name, json)
+  def parse_element(elm_name, cfn_hash)
     function = parser(elm_name)
-    send(function, elm_name, json)
+    send(function, elm_name, cfn_hash)
   end
 
   def parser(name)
@@ -66,27 +66,27 @@ class CloudFormation
     end
   end
 
-  def simple_parser(name, json)
-    json
+  def simple_parser(name, cfn_hash)
+    cfn_hash
   end
 
-  def complex_parser(name, json)
+  def complex_parser(name, cfn_hash)
     elms = []
     case name
     when :metadata
-      json.each_pair { |k, v| elms << Metadata.new(k, v) }
+      cfn_hash.each_pair { |k, v| elms << Metadata.new(k, v) }
     when :rules
-      json.each_pair { |k, v| elms << Rules.new(k, v) }
+      cfn_hash.each_pair { |k, v| elms << Rules.new(k, v) }
     when :parameters
-      json.each_pair { |k, v| elms << Parameter.new(k, v) }
+      cfn_hash.each_pair { |k, v| elms << Parameter.new(k, v) }
     when :resources
-      json.each_pair { |k, v| elms << Resource.new(k, v) }
+      cfn_hash.each_pair { |k, v| elms << Resource.new(k, v) }
     when :outputs
-      json.each_pair { |k, v| elms << Output.new(k, v) }
+      cfn_hash.each_pair { |k, v| elms << Output.new(k, v) }
     when :mappings
-      json.each_pair { |k, v| elms << Mapping.new(k, v) }
+      cfn_hash.each_pair { |k, v| elms << Mapping.new(k, v) }
     when :conditions
-      json.each_pair { |k, v| elms << Condition.new(k, v) }
+      cfn_hash.each_pair { |k, v| elms << Condition.new(k, v) }
     end
     return elms
   end

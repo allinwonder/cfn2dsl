@@ -4,6 +4,6 @@ class Condition
 
   def initialize(name, eval)
     @name        = name
-    @evaluations = parse_cfn_json(eval)
+    @evaluations = parse_cfn(eval)
   end
 end

@@ -17,11 +17,11 @@ class Parameter
 
   attr_reader(*ELEMENTS)
 
-  def initialize(name, json)
+  def initialize(name, cfn_hash)
     @name = name
     ELEMENTS.each do |e|
       key_name = e.to_s.camel_case
-      instance_variable_set('@' + e.to_s, json[key_name]) if json[key_name]
+      instance_variable_set('@' + e.to_s, cfn_hash[key_name]) if cfn_hash[key_name]
     end
   end
 end
