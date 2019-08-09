@@ -110,9 +110,14 @@ class IntrinsicFunction
   end
 
   def fn_sub
-    origin = '"' + @parameters[0].gsub('"'){'\\"'} + '"'
-    values    = @parameters[1].ai
-    return "FnSub(#{origin}, #{values})"
+   if @parameters.instance_of? String
+     value = '"' + @parameters.gsub('"'){'\\"'} + '"'
+     return "FnSub(#{value})"
+   else
+     origin = '"' + @parameters[0].gsub('"'){'\\"'} + '"'
+     values    = @parameters[1].ai
+     return "FnSub(#{origin}, #{values})"
+   end
   end
 
   def fn_split
