@@ -2,10 +2,10 @@ require 'spec_helper'
 
 RSpec.describe Parameter do
   let(:cfn_file) {File.open("#{File.dirname(__FILE__)}/load-based-auto-scaling.json")}
-  let(:cfn_json) {JSON.parse(cfn_file.read)}
+  let(:cfn_hash) {YAML.load(cfn_file.read)}
   let(:name) {"InstanceType"}
 
-  subject { described_class.new(name, cfn_json['Parameters']['InstanceType'])}
+  subject { described_class.new(name, cfn_hash['Parameters']['InstanceType'])}
 
   context("a known element") do
     it "includes the :default attribute with provided value" do

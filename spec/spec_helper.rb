@@ -1,4 +1,5 @@
 require 'json'
+require 'yaml'
 require 'rspec'
 require 'cfn2dsl'
 require 'pry'
