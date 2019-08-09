@@ -15,34 +15,36 @@ class CloudFormation
 
   attr_reader(*ELEMENTS)
 
-  def initialize(cloudformation_string)
-    if json_text?(cloudformation_string)
-      raise ParserError.new('Invalid JSON!') unless valid_json?(cloudformation_string)
+  def initialize(cfn_string)
+    if json_text?(cfn_string)
+      raise ParserError.new('Invalid JSON!') unless valid_json?(cfn_string)
+      cfn_hash = JSON.parse(cfn_string)
+    else
+      cfn_hash = YAML.load(cfn_string)
     end    
-    json = YAML.load(cloudformation_string)
-   # puts json['Parameters']
+    #puts cfn_hash['Metadata']
     ELEMENTS.each do |e|
       key  = e.to_s.camel_case
       if key =~ /^Aws/
         key = key.sub(/^Aws/, "AWS")
       end
 
-      if json[key]
-        attr = parse_element(e, json[key])
+      if cfn_hash[key]
+        attr = parse_element(e, cfn_hash[key])
         instance_variable_set("@" + e.to_s, attr)
       end
     end
   end
 
   private
-  def json_text?(cloudformation_string)
-    first_character = cloudformation_string.gsub(/\s/, '').split('').first
-    matches = cloudformation_string.scan(/\{[^}]*\}/)
+  def json_text?(cfn_string)
+    first_character = cfn_string.gsub(/\s/, '').split('').first
+    matches = cfn_string.scan(/\{[^}]*\}/)
     first_character == '{' && !matches.empty?
   end
 
-  def valid_json?(cloudformation_string)
-      JSON.parse(cloudformation_string)
+  def valid_json?(cfn_string)
+      JSON.parse(cfn_string)
       return true
   rescue JSON::ParserError => error
     return false
