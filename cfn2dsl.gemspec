@@ -4,8 +4,8 @@ Gem::Specification.new do |s|
   s.name = 'cfn2dsl'
   s.version = Cfn2dsl::VERSION
   s.date = Time.now().strftime("%Y-%m-%d")
-  s.authors = ["Kevin Yung", "Valen Gunawan"]
-  s.summary = "A tool to convert CloudFormation JSON template into a Ruby DSL cfndsl"
+  s.authors = ["Kevin Yung", "Valen Gunawan", "Cam Maxwell"]
+  s.summary = "A tool to convert CloudFormation templates into a Ruby DSL cfndsl"
   s.description = s.summary
   s.license = 'MIT'
   s.files = [

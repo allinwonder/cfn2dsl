@@ -15,7 +15,12 @@ class CloudFormation
 
   attr_reader(*ELEMENTS)
 
-  def initialize(json)
+  def initialize(cloudformation_string)
+    if json_text?(cloudformation_string)
+      raise ParserError.new('Invalid JSON!') unless valid_json?(cloudformation_string)
+    end    
+    json = YAML.load(cloudformation_string)
+   # puts json['Parameters']
     ELEMENTS.each do |e|
       key  = e.to_s.camel_case
       if key =~ /^Aws/
@@ -30,6 +35,19 @@ class CloudFormation
   end
 
   private
+  def json_text?(cloudformation_string)
+    first_character = cloudformation_string.gsub(/\s/, '').split('').first
+    matches = cloudformation_string.scan(/\{[^}]*\}/)
+    first_character == '{' && !matches.empty?
+  end
+
+  def valid_json?(cloudformation_string)
+      JSON.parse(cloudformation_string)
+      return true
+  rescue JSON::ParserError => error
+    return false
+  end
+    
   def parse_element(elm_name, json)
     function = parser(elm_name)
     send(function, elm_name, json)
