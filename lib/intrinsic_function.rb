@@ -122,7 +122,12 @@ class IntrinsicFunction
 
   def fn_split
     delimiter = '"' + @parameters[0].gsub('"'){'\\"'} + '"'
-    value     = '"' + @parameters[1] + '"'
+    # value     = '"' + @parameters[1] + '"'
+    if @parameters[1].instance_of? String
+       value     = '"' + @parameters[1] + '"'
+    else
+      value = @parameters[1].ai
+    end
     return "FnSplit(#{delimiter}, #{value})"
   end
 
