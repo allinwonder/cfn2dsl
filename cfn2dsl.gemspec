@@ -30,6 +30,6 @@ Gem::Specification.new do |s|
   s.email = 'jwrong@gmail.com'
   s.required_ruby_version = '>= 2.3.0'
   s.add_dependency('extlib', '0.9.16')
-  s.add_dependency('awesome_print', '1.7.0')
+  s.add_dependency('awesome_print', '1.8.0')
   s.add_dependency('erubis', '2.7.0')
 end
