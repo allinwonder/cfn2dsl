@@ -146,5 +146,8 @@ class IntrinsicFunction
     return "FnGetAZs(#{value})"
   end
   
+  def fn_cidr
+    return "FnCidr(#{@parameters.ai})"
+  end
 
 end
