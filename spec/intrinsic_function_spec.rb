@@ -10,6 +10,12 @@ RSpec.describe IntrinsicFunction do
     end
   end
 
+  context 'Fn::Cidr()' do
+    let(:name) { 'Fn::Cidr' }
+    let(:input) { [ "192.168.0.0/24", 6, 5 ] }
+    it_behaves_like 'an intrinsic function'
+  end
+
   context 'Fn::Select()' do
     let(:name) { 'Fn::Select' }
     let(:input) { [0, [ "apples", "grapes", "oranges", "mangoes" ]] }
