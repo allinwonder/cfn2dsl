@@ -1,4 +1,5 @@
 require 'extlib'
+require 'psych'
 class CloudFormation
 
   ELEMENTS = [
@@ -16,13 +17,7 @@ class CloudFormation
   attr_reader(*ELEMENTS)
 
   def initialize(cfn_string)
-    if json_text?(cfn_string)
-      raise ParserError.new('Invalid JSON!') unless valid_json?(cfn_string)
-      cfn_hash = JSON.parse(cfn_string)
-    else
-      cfn_hash = YAML.load(cfn_string)
-    end    
-    #puts cfn_hash['Metadata']
+    cfn_hash = Psych.safe_load(cfn_string)
     ELEMENTS.each do |e|
       key  = e.to_s.camel_case
       if key =~ /^Aws/
@@ -34,22 +29,13 @@ class CloudFormation
         instance_variable_set("@" + e.to_s, attr)
       end
     end
+  rescue Psych::DisallowedClass => error
+    raise Exception.new "Invalid YAML. Only simple scalars are supported. #{error.message}. Check that values are quoted."
+  rescue Psych::Exception => error
+    raise Exception.new "Invalid YAML. #{error.message}"    
   end
 
   private
-  def json_text?(cfn_string)
-    first_character = cfn_string.gsub(/\s/, '').split('').first
-    matches = cfn_string.scan(/\{[^}]*\}/)
-    first_character == '{' && !matches.empty?
-  end
-
-  def valid_json?(cfn_string)
-      JSON.parse(cfn_string)
-      return true
-  rescue JSON::ParserError => error
-    return false
-  end
-    
   def parse_element(elm_name, cfn_hash)
     function = parser(elm_name)
     send(function, elm_name, cfn_hash)
