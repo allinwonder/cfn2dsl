@@ -30,9 +30,9 @@ class CloudFormation
       end
     end
   rescue Psych::DisallowedClass => error
-    raise Exception.new "Invalid YAML. Only simple scalars are supported. #{error.message}. Check that values are quoted."
+    raise YamlValueTypeError.new "Unsupported YAML value type found: only scalar values supported. #{error.message}"
   rescue Psych::Exception => error
-    raise Exception.new "Invalid YAML. #{error.message}"    
+    raise YamlSyntaxError.new "Syntax error in template. #{error.message}"
   end
 
   private
