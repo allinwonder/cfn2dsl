@@ -29,7 +29,7 @@ Gem::Specification.new do |s|
   s.executables << 'cfn2dsl'
   s.homepage = 'https://github.com/allinwonder/cfn2dsl.git'
   s.email = 'jwrong@gmail.com'
-  s.required_ruby_version = '>= 2.3.0'
+  s.required_ruby_version = '>= 2.4.4'
   s.add_dependency('extlib', '0.9.16')
   s.add_dependency('awesome_print', '1.8.0')
   s.add_dependency('erubis', '2.7.0')
