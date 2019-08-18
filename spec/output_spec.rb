@@ -1,11 +1,11 @@
 require 'spec_helper'
 
 RSpec.describe Output do
-  let(:cfn_file) {File.open("#{File.dirname(__FILE__)}/basic-amazon-redshift-cluster.json")}
-  let(:cfn_json) {JSON.parse(cfn_file.read)}
+  let(:cfn_file) {File.open("#{File.dirname(__FILE__)}/samples/basic-amazon-redshift-cluster.json")}
+  let(:cfn_hash) {YAML.load(cfn_file.read)}
 
   let(:name) {"ClusterEndpoint"}
-  subject {described_class.new(name, cfn_json['Outputs'][name])}
+  subject {described_class.new(name, cfn_hash['Outputs'][name])}
 
   it "has name ClusterEndpoint" do
     expect(subject.name).to eq "ClusterEndpoint"

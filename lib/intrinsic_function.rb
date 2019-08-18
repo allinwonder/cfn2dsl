@@ -110,14 +110,24 @@ class IntrinsicFunction
   end
 
   def fn_sub
-    origin = '"' + @parameters[0].gsub('"'){'\\"'} + '"'
-    values    = @parameters[1].ai
-    return "FnSub(#{origin}, #{values})"
+   if @parameters.instance_of? String
+     value = '"' + @parameters.gsub('"'){'\\"'} + '"'
+     return "FnSub(#{value})"
+   else
+     origin = '"' + @parameters[0].gsub('"'){'\\"'} + '"'
+     values    = @parameters[1].ai
+     return "FnSub(#{origin}, #{values})"
+   end
   end
 
   def fn_split
     delimiter = '"' + @parameters[0].gsub('"'){'\\"'} + '"'
-    value     = '"' + @parameters[1] + '"'
+    # value     = '"' + @parameters[1] + '"'
+    if @parameters[1].instance_of? String
+       value     = '"' + @parameters[1] + '"'
+    else
+      value = @parameters[1].ai
+    end
     return "FnSplit(#{delimiter}, #{value})"
   end
 
@@ -136,5 +146,8 @@ class IntrinsicFunction
     return "FnGetAZs(#{value})"
   end
   
+  def fn_cidr
+    return "FnCidr(#{@parameters.ai})"
+  end
 
 end

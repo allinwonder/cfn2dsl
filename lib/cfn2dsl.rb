@@ -1,6 +1,7 @@
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 
 require 'json'
+require 'yaml'
 require 'optparse'
 require 'ap'
 
@@ -16,6 +17,7 @@ require 'render'
 require 'version'
 require 'rules'
 require 'metadata'
+require 'error'
 
 AwesomePrint.defaults = {
   :indent    => -2,
@@ -24,3 +26,15 @@ AwesomePrint.defaults = {
   :plain     => true
 }
 
+YAML.add_domain_type('', 'Ref') { |type, val| { 'Ref' => val } }
+
+YAML.add_domain_type('', 'GetAtt') do |type, val|
+  if val.is_a? String
+    val = val.split('.')
+  end
+  { 'Fn::GetAtt' => val }
+end
+
+%w(Join Base64 Sub Cidr Split Select ImportValue GetAZs FindInMap And Or If Not).each do |function_name|
+  YAML.add_domain_type('', function_name) { |type, val| { "Fn::#{function_name}" => val } }
+end

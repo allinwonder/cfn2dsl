@@ -1,13 +1,13 @@
 ### Cfn2dsl [![Build Status](https://travis-ci.org/allinwonder/cfn2dsl.svg?branch=master)](https://travis-ci.org/allinwonder/cfn2dsl) 
 
-cfn2dsl is a tool to enable CloudFormation development teams to work with both JSON templates and Ruby DSL code written in `cfndsl` (created by [cfndsl](https://github.com/stevenjack/cfndsl) project).
+cfn2dsl is a tool to enable CloudFormation development teams to work with both JSON and YAML templates to produce Ruby DSL code written in `cfndsl` format (created by [cfndsl](https://github.com/stevenjack/cfndsl) project).
 
 The idea is to give developers options for developing CloudFormation configurations using the tool and language which they feel comfortable and efficient in. Some developers like to develop JSON templates, and others like to develop with `cfndsl`. We need a tool to synchronise development in both methods, so `cfn2dsl` is here to help. It can parse CloudFormation JSON templates and translate them into `cfndsl`'s Ruby DSL.
 
 #### what cfn2dsl can do
 
 
-* It parses CloudFormation JSON template and outputs `cfndsl` Ruby code.
+* It parses CloudFormation JSON or YAML template and outputs `cfndsl` Ruby code.
 
 * It uses generic `cfndsl` objects in the translation, for example `Parameter()`, `Resource()`, `Output()` and `Property()`. It supports all the resources, attributes and properties officially supported by CloudFormation.
 
@@ -41,14 +41,14 @@ Usage: cfn2dsl -t|--template file [-o|--output file]
     -h, --help                       show this message
 ```
 
-* Translate JSON template and send output to standard output
+* Translate template and send output to standard output
 
 ```
-cfn2dsl -t /your/path/to/template.json
+cfn2dsl -t /your/path/to/template.yaml
 ```
 
-* Translate JSON template and write output to file
+* Translate template and write output to file
 
 ```
-cfn2dsl -t /your/path/to/template.json -o /your/path/to/template.rb
+cfn2dsl -t /your/path/to/template.yaml -o /your/path/to/template.rb
 ```

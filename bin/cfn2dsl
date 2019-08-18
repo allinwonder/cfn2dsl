@@ -30,7 +30,7 @@ unless options[:template]
   puts op
   exit 1
 else
-  template = JSON.load(File.new(options[:template]))
+  template = IO.read(options[:template])
   cfndsl   = CloudFormation.new(template)
 end
 

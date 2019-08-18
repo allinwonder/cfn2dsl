@@ -14,10 +14,10 @@ class Resource
 
   attr_reader(:name, *ATTRIBUTES)
 
-  def initialize(name, json)
+  def initialize(name, cfn_hash)
     @name = name
     ATTRIBUTES.each do |a|
-      send(attribute_type(a), json, a.to_s)
+      send(attribute_type(a), cfn_hash, a.to_s)
     end
   end
 
@@ -37,18 +37,18 @@ class Resource
     return type
   end
 
-  def complex_attribute(json, name)
-    if json[name.camel_case]
-      values = json[name.camel_case].merge do |k, v|
-        parse_cfn_json(v)
+  def complex_attribute(cfn_hash, name)
+    if cfn_hash[name.camel_case]
+      values = cfn_hash[name.camel_case].merge do |k, v|
+        parse_cfn(v)
       end
       instance_variable_set('@' + name, values)
     end
   end
 
-  def basic_attribute(json, name)
-    if json[name.camel_case]
-      instance_variable_set('@' + name, parse_cfn_json(json[name.camel_case]))
+  def basic_attribute(cfn_hash, name)
+    if cfn_hash[name.camel_case]
+      instance_variable_set('@' + name, parse_cfn(cfn_hash[name.camel_case]))
     end
   end
 end

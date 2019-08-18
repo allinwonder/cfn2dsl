@@ -1,2 +1,4 @@
 .ruby-gemset
 *.gem
+.bundle
+vendor

@@ -4,6 +4,6 @@ class Rules
 
   def initialize(name, values)
     @name   = name
-    @values = parse_cfn_json(values)
+    @values = parse_cfn(values)
   end
 end

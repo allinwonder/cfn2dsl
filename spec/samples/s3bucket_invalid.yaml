@@ -1,0 +1,241 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: S3 Storage integrated with KMS and IAM
+Parameters:
+  ProvisioningRoleID:
+    Type: String
+    Default: AROAABCDEFGHIJKLMNOP
+    Description: IAM RoleID to be allowed to administer KMS Key and access S3
+    AllowPattern: "AROA[A-Z0-9]{17}"
+  InstanceRoleID:
+    Type: String
+    Default: AROA1234567890123456
+    Description: IAM RoleID of instance profile using the KMS Key and access S3
+    AllowPattern: "AROA[A-Z0-9]{17}"
+  LoggingBucket:
+    Type: String
+    Description: S3 Bucket where access logs from new S3 bucket will be sent
+  VPCEndpoint:
+    Type: String
+    Default: vpce-1234abcd5678ef90
+    Description: VPC Endpoint ID
+    AllowPattern: "vpce-[a-f0-9]{8,16}"
+  BucketName:
+    Type: String
+    Default: f4c8e474d09b
+    Description: Hexadecimal string for bucket name
+    AllowPattern: "[a-f0-9]{16}"  
+
+Resources:
+  KMSKey:
+    Type: "AWS::KMS::Key"
+    Properties:
+      Description: 'KMS Key for encrypting S3 Bucket'
+      Enabled: True
+      EnableKeyRotation
+      KeyPolicy:
+        Version: '2012-10-17'
+        Id: KMS Key Access
+        Statement:
+        - Sid: DenyDelete
+          Effect: Deny
+          Principal: '*'
+          Action:
+          - 'kms:ScheduleKeyDeletion'
+          - 'kms:Delete*'
+          Resource:
+          - '*'
+        - Sid: DenyKeyAccess
+          Effect: Deny
+          Principal: '*'
+          Action:
+          - 'kms:*'
+          Resource:
+          - '*'
+          Condition:
+            StringNotLike:
+              'aws:userId':
+              - !Sub "${ProvisioningRoleID}:*"
+
+        - Sid: AllowAccessForKeyAdministrator
+          Effect: Allow
+          Principal: '*'
+          Action:
+          - 'kms:CreateKey'
+          - 'kms:CreateAlias'
+          - 'kms:CreateGrant'
+          - 'kms:Describe*'
+          - 'kms:Enable*'
+          - 'kms:List*'
+          - 'kms:Put*'
+          - 'kms:Update*'
+          - 'kms:Revoke*'
+          - 'kms:Disable*'
+          - 'kms:Get*'
+          - 'kms:TagResource'
+          - 'kms:UntagResource'
+          - 'kms:CancelKeyDeletion'
+          - 'kms:GenerateDataKey*'
+          Resource:
+          - '*'
+          Condition:
+            StringLike:
+              'aws:userId':
+              - !Sub "${ProvisioningRoleID}:*"
+
+        - Sid: AllowUseOftheKey
+          Effect: Allow
+          Principal: '*'
+          Action:
+          - "kms:Encrypt"
+          - 'kms:Decrypt'
+          - 'kms:DescribeKey'
+          - 'kms:GenerateDataKey*'
+          Resource:
+          - '*'
+          Condition:
+            StringLike:
+              'aws:userId':
+              - !Sub "${InstanceRoleID}:*"
+
+  BucketPolicy:
+    Type: "AWS::S3::BucketPolicy"
+    DependsOn: Bucket
+    Properties:
+      Bucket: !Ref Bucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Sid: DenyHTTPAccess
+          Effect: Deny
+          Principal: "*"
+          Action:
+          - 's3:*'
+          Resource:
+          - !GetAtt Bucket.Arn
+          - !Sub "${Bucket.Arn}/*"
+          Condition:
+            Bool:
+              aws:SecureTransport:
+              - false
+
+        - Sid: DenyIncorrectEncryptionHeader
+          Effect: Deny
+          Principal: "*"
+          Action:
+          - 's3:PutObject'
+          Resource:
+          - !GetAtt Bucket.Arn
+          - !Sub "${Bucket.Arn}/*"
+          Condition:
+            StringNotEquals:
+              s3:x-amz-server-side-encryption:
+              - aws:kms
+
+        - Sid: DenyUnEncryptedObjectUploads
+          Effect: Deny
+          Principal: "*"
+          Action:
+          - 's3:PutObject'
+          Resource:
+          - !GetAtt Bucket.Arn
+          - !Sub "${Bucket.Arn}/*"
+          Condition:
+            "Null":
+              s3:x-amz-server-side-encryption:
+              - true
+
+        - Sid: DenyAccessIfSpecificKMSKeyIsNotUsed
+          Effect: Deny
+          Principal: '*'
+          Action:
+          - 's3:PutObject'
+          Resource:
+          - !GetAtt Bucket.Arn
+          - !Sub "${Bucket.Arn}/*"
+          Condition:
+            StringNotLikeIfExists:
+              s3:x-amz-server-side-encryption-aws-kms-key-id:
+              - !GetAtt KMSKey.Arn
+
+        - Sid: DenyDelete
+          Effect: Deny
+          Principal: "*"
+          Action:
+          - 's3:Delete*'
+          Resource:
+          - !GetAtt Bucket.Arn
+          - !Sub "${Bucket.Arn}/*"
+
+        - Sid: DenyAllExceptConnectAndOthersViaVPCE
+          Effect: Deny
+          Principal: '*'
+          Action:
+          - 's3:*'
+          Resource:
+          - !GetAtt Bucket.Arn
+          - !Sub "${Bucket.Arn}/*"
+          Condition:
+            StringNotEquals:
+              aws:sourceVpce: !Sub "${VPCEndpoint}"
+
+        - Sid: AllowObjectReadWrite
+          Effect: Allow
+          Principal: '*'
+          Action:
+          - 's3:PutObject*'
+          - 's3:Get*'
+          - 's3:List*'
+          Resource:
+          - !GetAtt Bucket.Arn
+          - !Sub "${Bucket.Arn}/*"
+          Condition:
+            StringLike:
+              'aws:userId':
+              - !Sub "${InstanceRoleID}:*"              
+
+        - Sid: AllowBucketConfiguration
+          Effect: Allow
+          Principal: '*'
+          Action:
+          - 's3:*'
+          Resource:
+          - !GetAtt Bucket.Arn
+          - !Sub "${Bucket.Arn}/*"
+          Condition:
+            StringLike:
+              'aws:userId':
+              - !Sub "${ProvisioningRoleID}:*"
+
+  Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "${BucketName}"
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+        - ServerSideEncryptionByDefault:
+            KMSMasterKeyID: !GetAtt KMSKey.Arn
+            SSEAlgorithm: "aws:kms"
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      LoggingConfiguration:
+        DestinationBucketName: !Sub "${LoggingBucket}"
+        LogFilePrefix: !Sub "S3logs/${AWS::AccountId}/${BucketName}/"
+      VersioningConfiguration:
+        Status: Enabled
+
+Outputs:
+  BucketName:
+    Description: Bucket Name
+    Value: !Ref Bucket
+
+  BucketName:
+    Description: Bucket Arn
+    Value: !GetAtt Bucket.Arn
+
+  KMSKey:
+    Description: KMS Key Id
+    Value: !Ref KMSKey
+
