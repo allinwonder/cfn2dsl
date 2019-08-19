@@ -7,6 +7,7 @@ group :development, :test do
   gem 'guard'
   gem 'guard-rspec'
   gem 'pry'
+  gem 'ffi', '>= 1.9.24'
 end
 gem 'extlib'
 gem 'awesome_print'
