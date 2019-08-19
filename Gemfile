@@ -8,7 +8,6 @@ group :development, :test do
   gem 'guard-rspec'
   gem 'pry'
 end
-
 gem 'extlib'
 gem 'awesome_print'
 gem 'erubis'

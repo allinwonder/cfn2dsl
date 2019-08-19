@@ -7,7 +7,7 @@ GEM
     diff-lcs (1.3)
     erubis (2.7.0)
     extlib (0.9.16)
-    ffi (1.9.18)
+    ffi (1.9.24)
     formatador (0.2.5)
     guard (2.14.1)
       formatador (>= 0.2.4)
@@ -67,6 +67,7 @@ DEPENDENCIES
   cfndsl
   erubis
   extlib
+  ffi (>= 1.9.24)
   guard
   guard-rspec
   pry
